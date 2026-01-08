@@ -1,14 +1,9 @@
-# Requirements para produção - Nathy VTuber Online
+# Requirements para Render - Versão otimizada
 
 # Web Framework
 fastapi==0.104.1
 uvicorn[standard]==0.24.0
 websockets==12.0
-
-# Banco de Dados
-asyncpg==0.29.0
-redis==5.0.1
-aiosqlite==0.19.0
 
 # HTTP Client
 httpx==0.25.2
@@ -19,26 +14,19 @@ python-dotenv==1.0.0
 pydantic==2.5.0
 pydantic-settings==2.1.0
 
-# Áudio (mantidos do original)
-sounddevice==0.4.4
+# Áudio essencial (mantidos)
 soundfile==0.10.3
 numpy==1.24.3
-librosa==0.9.0
 
-# Machine Learning (opcional para processamento local)
-torch==2.0.0
-torchaudio==2.0.0
-
-# STT/TTS (se manter local)
+# STT/TTS local (fallback)
 faster-whisper==0.9.0
 pyttsx3==2.90
 
+# Banco de dados leve
+aiosqlite==0.19.0
+
 # Utilitários
 loguru==0.7.2
-tqdm==4.66.0
-
-# Monitoramento (opcional)
-sentry-sdk[fastapi]==1.38.0
 
 # CORS
 python-cors==1.7.0
