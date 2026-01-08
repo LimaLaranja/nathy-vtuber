@@ -14,8 +14,8 @@ python-dotenv==1.0.0
 pydantic==2.5.0
 pydantic-settings==2.1.0
 
-# Áudio essencial (mantidos)
-soundfile==0.10.3
+# Áudio essencial (versões corretas)
+soundfile==0.12.1
 numpy==1.24.3
 
 # STT/TTS local (fallback)
