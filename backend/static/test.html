@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>VTuber Test</title>
+</head>
+<body>
+    <h1>VTuber WebSocket Test</h1>
+    <div id="status">Status: Desconectado</div>
+    <button id="connectBtn">Conectar</button>
+    <div id="logs"></div>
+    
+    <script>
+        let ws;
+        const connectBtn = document.getElementById('connectBtn');
+        const statusDiv = document.getElementById('status');
+        const logsDiv = document.getElementById('logs');
+        
+        function log(message) {
+            console.log(message);
+            logsDiv.innerHTML += '<p>' + message + '</p>';
+        }
+        
+        function connectWebSocket() {
+            log('Tentando conectar WebSocket...');
+            
+            const wsUrl = 'ws://localhost:8000/ws';
+            log('URL: ' + wsUrl);
+            
+            ws = new WebSocket(wsUrl);
+            
+            ws.onopen = () => {
+                log('WebSocket conectado!');
+                statusDiv.textContent = 'Status: Conectado';
+                connectBtn.disabled = true;
+                
+                ws.send(JSON.stringify({
+                    type: 'hello',
+                    user_id: 'test_user'
+                }));
+            };
+            
+            ws.onmessage = (event) => {
+                log('Mensagem recebida: ' + event.data);
+            };
+            
+            ws.onerror = (error) => {
+                log('Erro WebSocket: ' + error);
+                statusDiv.textContent = 'Status: Erro';
+            };
+            
+            ws.onclose = () => {
+                log('WebSocket fechado');
+                statusDiv.textContent = 'Status: Desconectado';
+                connectBtn.disabled = false;
+            };
+        }
+        
+        connectBtn.addEventListener('click', connectWebSocket);
+    </script>
+</body>
+</html>

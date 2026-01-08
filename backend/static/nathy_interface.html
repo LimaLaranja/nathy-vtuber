@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nathy VTuber IA - Interface</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            max-width: 800px;
+            width: 90%;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ff4444;
+            animation: pulse 2s infinite;
+        }
+
+        .status-dot.connected {
+            background: #44ff44;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .text-input-container {
+            margin-bottom: 1rem;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 0.5rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        #textInput {
+            flex: 1;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 1rem;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            outline: none;
+        }
+
+        #textInput::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        #textInput:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .send-btn {
+            padding: 0.75rem 1.5rem;
+            background: rgba(102, 126, 234, 0.8);
+            border: none;
+            border-radius: 25px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            border: 1px solid rgba(102, 126, 234, 0.9);
+        }
+
+        .send-btn:hover:not(:disabled) {
+            background: rgba(102, 126, 234, 1);
+            transform: translateY(-2px);
+        }
+
+        .send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn.recording {
+            background: #ff4444;
+            animation: recordPulse 1s infinite;
+        }
+
+        @keyframes recordPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(255, 68, 68, 0.7); }
+            50% { box-shadow: 0 0 0 10px rgba(255, 68, 68, 0); }
+        }
+
+        .chat-container {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            padding: 1.5rem;
+            height: 400px;
+            overflow-y: auto;
+            margin-bottom: 1rem;
+        }
+
+        .message {
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            border-radius: 10px;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+
+        .message.user {
+            background: rgba(255, 255, 255, 0.2);
+            margin-left: auto;
+            text-align: right;
+        }
+
+        .message.nathy {
+            background: rgba(100, 126, 234, 0.3);
+            border-left: 4px solid #667eea;
+        }
+
+        .message .sender {
+            font-weight: bold;
+            margin-bottom: 0.25rem;
+            font-size: 0.9rem;
+        }
+
+        .message .text {
+            line-height: 1.4;
+        }
+
+        .info-panel {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .info-panel h3 {
+            margin-bottom: 0.5rem;
+            color: #667eea;
+        }
+
+        .info-panel p {
+            font-size: 0.9rem;
+            line-height: 1.4;
+            opacity: 0.9;
+        }
+
+        .audio-visualizer {
+            height: 60px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            margin: 1rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .audio-bar {
+            width: 4px;
+            background: #667eea;
+            margin: 0 2px;
+            border-radius: 2px;
+            transition: height 0.1s ease;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+                margin: 1rem;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌸 Nathy VTuber IA</h1>
+            <div class="status">
+                <div class="status-dot" id="statusDot"></div>
+                <span id="status">Desconectado</span>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn" id="connectBtn">Conectar</button>
+            <button class="btn" id="recordBtn" disabled>🎤 Gravar Áudio</button>
+            <button class="btn" id="clearBtn">Limpar Chat</button>
+        </div>
+
+        <div class="text-input-container">
+            <div class="input-group">
+                <input type="text" id="textInput" placeholder="Digite sua mensagem para Nathy..." disabled>
+                <button class="btn send-btn" id="sendBtn" disabled>Enviar</button>
+            </div>
+        </div>
+
+        <div class="audio-visualizer" id="audioVisualizer">
+            <!-- Audio bars will be added dynamically -->
+        </div>
+
+        <div class="chat-container" id="chatContainer">
+            <div class="message nathy">
+                <div class="sender">Nathy</div>
+                <div class="text">Oieee! Eu sou a Nathy! 🌸 Uma VTuber 3D super divertida! Vamos conversar? Pode clicar no botão de gravar e falar comigo!</div>
+            </div>
+        </div>
+
+        <div class="info-panel">
+            <h3>Sobre a Nathy</h3>
+            <p>🌸 VTuber 3D brasileira com personalidade única<br>
+            🎮 Adora tecnologia, jogos e memes<br>
+            💬 Conversas inteligentes e divertidas<br>
+            🧠 Aprende com cada conversa</p>
+        </div>
+    </div>
+
+    <script>
+        class NathyInterface {
+            constructor() {
+                this.ws = null;
+                this.isConnected = false;
+                this.isRecording = false;
+                this.mediaRecorder = null;
+                this.audioChunks = [];
+                
+                this.initializeElements();
+                this.setupEventListeners();
+                this.createAudioVisualizer();
+            }
+
+            initializeElements() {
+                this.connectBtn = document.getElementById('connectBtn');
+                this.recordBtn = document.getElementById('recordBtn');
+                this.clearBtn = document.getElementById('clearBtn');
+                this.sendBtn = document.getElementById('sendBtn');
+                this.textInput = document.getElementById('textInput');
+                this.status = document.getElementById('status');
+                this.statusDot = document.getElementById('statusDot');
+                this.chatContainer = document.getElementById('chatContainer');
+                this.audioVisualizer = document.getElementById('audioVisualizer');
+            }
+
+            setupEventListeners() {
+                this.connectBtn.addEventListener('click', () => this.connect());
+                this.recordBtn.addEventListener('click', () => this.toggleRecording());
+                this.clearBtn.addEventListener('click', () => this.clearChat());
+                this.sendBtn.addEventListener('click', () => this.sendTextMessage());
+                this.textInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' && !this.textInput.disabled) {
+                        this.sendTextMessage();
+                    }
+                });
+            }
+
+            createAudioVisualizer() {
+                for (let i = 0; i < 20; i++) {
+                    const bar = document.createElement('div');
+                    bar.className = 'audio-bar';
+                    bar.style.height = '4px';
+                    this.audioVisualizer.appendChild(bar);
+                }
+                this.audioBars = this.audioVisualizer.querySelectorAll('.audio-bar');
+            }
+
+            animateAudioBars() {
+                if (!this.isRecording) return;
+                
+                this.audioBars.forEach(bar => {
+                    const height = Math.random() * 40 + 10;
+                    bar.style.height = `${height}px`;
+                });
+                
+                requestAnimationFrame(() => this.animateAudioBars());
+            }
+
+            async connect() {
+                try {
+                    this.updateStatus('Conectando...', false);
+                    
+                    this.ws = new WebSocket('ws://localhost:8000/ws');
+                    
+                    this.ws.onopen = () => {
+                        this.isConnected = true;
+                        this.updateStatus('Conectado', true);
+                        this.connectBtn.textContent = 'Desconectar';
+                        this.recordBtn.disabled = false;
+                        this.textInput.disabled = false;
+                        this.sendBtn.disabled = false;
+                        
+                        this.ws.send(JSON.stringify({
+                            type: 'hello',
+                            user_id: 'web_user'
+                        }));
+                        
+                        this.addMessage('Nathy', 'Conexão estabelecida! Estou pronta para conversar! 🌸', 'nathy');
+                    };
+                    
+                    this.ws.onmessage = (event) => {
+                        try {
+                            const data = JSON.parse(event.data);
+                            this.handleMessage(data);
+                        } catch (error) {
+                            console.error('Error parsing message:', error);
+                        }
+                    };
+                    
+                    this.ws.onclose = () => {
+                        this.isConnected = false;
+                        this.updateStatus('Desconectado', false);
+                        this.connectBtn.textContent = 'Conectar';
+                        this.recordBtn.disabled = true;
+                        this.textInput.disabled = true;
+                        this.sendBtn.disabled = true;
+                    };
+                    
+                    this.ws.onerror = (error) => {
+                        console.error('WebSocket error:', error);
+                        this.updateStatus('Erro na conexão', false);
+                    };
+                    
+                } catch (error) {
+                    console.error('Connection error:', error);
+                    this.updateStatus('Erro ao conectar', false);
+                }
+            }
+
+            async toggleRecording() {
+                if (!this.isRecording) {
+                    await this.startRecording();
+                } else {
+                    this.stopRecording();
+                }
+            }
+
+            async startRecording() {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    this.mediaRecorder = new MediaRecorder(stream);
+                    this.audioChunks = [];
+                    
+                    this.mediaRecorder.ondataavailable = (event) => {
+                        this.audioChunks.push(event.data);
+                    };
+                    
+                    this.mediaRecorder.onstop = () => {
+                        const audioBlob = new Blob(this.audioChunks, { type: 'audio/webm' });
+                        this.sendAudio(audioBlob);
+                    };
+                    
+                    this.mediaRecorder.start();
+                    this.isRecording = true;
+                    this.recordBtn.textContent = '⏹️ Parar';
+                    this.recordBtn.classList.add('recording');
+                    this.animateAudioBars();
+                    
+                } catch (error) {
+                    console.error('Error starting recording:', error);
+                    this.addMessage('Sistema', 'Erro ao acessar microfone. Verifique as permissões.', 'system');
+                }
+            }
+
+            stopRecording() {
+                if (this.mediaRecorder && this.isRecording) {
+                    this.mediaRecorder.stop();
+                    this.isRecording = false;
+                    this.recordBtn.textContent = '🎤 Gravar Áudio';
+                    this.recordBtn.classList.remove('recording');
+                    
+                    // Reset audio bars
+                    this.audioBars.forEach(bar => {
+                        bar.style.height = '4px';
+                    });
+                    
+                    // Stop all tracks
+                    this.mediaRecorder.stream.getTracks().forEach(track => track.stop());
+                }
+            }
+
+            sendAudio(audioBlob) {
+                if (this.isConnected && this.ws.readyState === WebSocket.OPEN) {
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                        const base64Audio = reader.result.split(',')[1];
+                        this.ws.send(JSON.stringify({
+                            type: 'audio',
+                            audio: base64Audio
+                        }));
+                    };
+                    reader.readAsDataURL(audioBlob);
+                    
+                    this.addMessage('Você', '🎤 Enviando áudio...', 'user');
+                }
+            }
+
+            handleMessage(data) {
+                switch (data.type) {
+                    case 'transcription':
+                        this.addMessage('Você', data.text, 'user');
+                        break;
+                    case 'response':
+                        this.addMessage('Nathy', data.text, 'nathy');
+                        break;
+                    case 'error':
+                        this.addMessage('Sistema', data.message, 'system');
+                        break;
+                    default:
+                        console.log('Unknown message type:', data);
+                }
+            }
+
+            addMessage(sender, text, type) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${type}`;
+                messageDiv.innerHTML = `
+                    <div class="sender">${sender}</div>
+                    <div class="text">${text}</div>
+                `;
+                
+                this.chatContainer.appendChild(messageDiv);
+                this.chatContainer.scrollTop = this.chatContainer.scrollHeight;
+            }
+
+            sendTextMessage() {
+                const text = this.textInput.value.trim();
+                if (!text || !this.isConnected) return;
+                
+                this.textInput.value = '';
+                
+                // Send text message to server
+                this.ws.send(JSON.stringify({
+                    type: 'text',
+                    text: text
+                }));
+            }
+
+            clearChat() {
+                const messages = this.chatContainer.querySelectorAll('.message');
+                messages.forEach(msg => msg.remove());
+                
+                this.addMessage('Nathy', 'Chat limpo! Vamos começar de novo! 🌸', 'nathy');
+            }
+
+            updateStatus(text, connected) {
+                this.status.textContent = text;
+                if (connected) {
+                    this.statusDot.classList.add('connected');
+                } else {
+                    this.statusDot.classList.remove('connected');
+                }
+            }
+        }
+
+        // Initialize the interface when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new NathyInterface();
+        });
+    </script>
+</body>
+</html>

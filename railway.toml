@@ -1,0 +1,24 @@
+# Railway Configuration for Nathy VTuber
+
+[build]
+builder = "DOCKERFILE"
+
+[deploy]
+startCommand = "uvicorn main:app --host 0.0.0.0 --port $PORT"
+healthcheckPath = "/"
+healthcheckTimeout = 100
+restartPolicyType = "ON_FAILURE"
+
+[services]
+web = "main:app"
+
+[[services.ports]]
+port = 8000
+handlers = ["http"]
+
+[services.variables]
+ENVIRONMENT = "production"
+DEBUG = "false"
+HOST = "0.0.0.0"
+PORT = "8000"
+LLM_PROVIDER = "openai"
