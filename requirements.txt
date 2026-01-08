@@ -16,7 +16,7 @@ pydantic-settings==2.1.0
 
 # Áudio essencial (versões corretas)
 soundfile==0.12.1
-numpy==1.21.6
+numpy==1.24.3
 
 # STT/TTS local (fallback)
 faster-whisper==0.9.0
